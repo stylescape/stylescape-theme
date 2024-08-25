@@ -1,10 +1,10 @@
 cff-version: 1.2.0
-title: unit.gl
+title: Stylescape Theme Template
 version: 0.0.1
 date-released: 2024-07-01
-url: "https://github.com/stylescape/unit.gl"
+url: "https://github.com/stylescape/stylescape-theme"
 message: >-
-  If you use unit.gl, please cite it using
+  If you use this Stylescape Theme Template, please cite it using
   the metadata from this file.
 type: software
 authors:
