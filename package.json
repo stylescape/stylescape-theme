@@ -20,7 +20,7 @@
         "test": "npm-run-all css-lint css"
     },
     "dependencies": {
-        "stylescape": "^0.0.22"
+        "stylescape": "^0.0.31"
     },
     "devDependencies": {
         "autoprefixer": "^10.4.19",
