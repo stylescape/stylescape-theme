@@ -4,9 +4,10 @@
 # Dependabot Configuration
 # =============================================================================
 #
-# Only the ecosystems this repository has. The base branch is `main`, the
-# default branch, so no `target-branch`. Updates are grouped so a week is a
-# few PRs, not ten; major versions still arrive as their own PRs.
+# Only the ecosystems this repository has. Work lands on `dev` (`main` is
+# the release branch), so every entry sets `target-branch: dev`. Updates
+# are grouped so a week is a few PRs, not ten; major versions still arrive
+# as their own PRs.
 
 version: 2
 
@@ -18,6 +19,7 @@ updates:
   -
     package-ecosystem: "npm"
     directory: "/"
+    target-branch: "dev"
     schedule:
       interval: "weekly"
       day: "sunday"
@@ -54,6 +56,7 @@ updates:
   -
     package-ecosystem: "github-actions"
     directory: "/"
+    target-branch: "dev"
     schedule:
       interval: "weekly"
       day: "sunday"
@@ -78,6 +81,7 @@ updates:
   -
     package-ecosystem: "docker"
     directory: "/.devcontainer"
+    target-branch: "dev"
     schedule:
       interval: "weekly"
       day: "sunday"
@@ -93,6 +97,7 @@ updates:
   -
     package-ecosystem: "devcontainers"
     directory: "/"
+    target-branch: "dev"
     schedule:
       interval: "weekly"
       day: "sunday"
