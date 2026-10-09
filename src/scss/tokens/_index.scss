@@ -1,0 +1,9 @@
+// =============================================================================
+// tokens — the template's tokens
+//
+// `brand` holds the raw palette as configurable SCSS variables; `css-vars`
+// emits the `--ss-*` overrides at `:root`. Order matters: css-vars last.
+// =============================================================================
+
+@forward "brand";
+@forward "css-vars";

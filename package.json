@@ -1,36 +1,129 @@
 {
-    "name": "stylescape_npm",
-    "description": "Include Stylescape's source Sass and compiled JavaScript bundle via npm.",
-    "version": "0.0.1",
-    "private": true,
-    "repository": "https://github.com/stylescape/example-npm",
-    "license": "MIT",
-    "stackblitz": {
-        "startCommand": "npm start"
+  "name": "stylescape_npm",
+  "version": "0.1.0",
+  "description": "The brand-neutral starter theme for the Stylescape design system — the template a new brand theme is copied from. Its placeholder palette is stylescape core's own defaults as --ss-* token overrides, with a dark variant for whole pages or single bands and the system font stacks.",
+  "keywords": [
+    "stylescape",
+    "theme",
+    "template",
+    "starter",
+    "design-tokens",
+    "sass",
+    "scss",
+    "css"
+  ],
+  "homepage": "https://github.com/stylescape/stylescape-theme#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stylescape/stylescape-theme.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stylescape/stylescape-theme/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Lars Bastiaan van Vianen",
+    "email": "lars@scape.agency"
+  },
+  "private": true,
+  "type": "module",
+  "main": "src/scss/index.scss",
+  "sass": "src/scss/index.scss",
+  "style": "src/scss/index.scss",
+  "exports": {
+    ".": {
+      "sass": "./src/scss/index.scss",
+      "style": "./src/scss/index.scss",
+      "default": "./src/scss/index.scss"
     },
-    "scripts": {
-        "build": "npm run css",
-        "css-compile": "sass --style compressed --source-map --embed-sources --no-error-css --load-path=node_modules scss/:css/",
-        "css-lint": "stylelint scss/",
-        "css-prefix": "postcss --replace css/styles.css --use autoprefixer --map",
-        "css": "npm-run-all css-compile css-prefix",
-        "server": "sirv --dev --no-clear --port 3000",
-        "start": "npm-run-all --parallel watch server",
-        "watch": "nodemon -e html,scss -x \"npm run css\"",
-        "test": "npm-run-all css-lint css"
+    "./abstracts": {
+      "sass": "./src/scss/abstracts/_index.scss"
     },
-    "dependencies": {
-        "stylescape": "^0.0.34"
+    "./tokens": {
+      "sass": "./src/scss/tokens/_index.scss"
     },
-    "devDependencies": {
-        "autoprefixer": "^10.4.19",
-        "nodemon": "^3.1.4",
-        "npm-run-all": "^4.1.5",
-        "postcss": "^8.4.39",
-        "postcss-cli": "^11.0.0",
-        "sass": "^1.77.6",
-        "sirv-cli": "^3.0.0",
-        "stylelint": "^16.6.1",
-        "stylelint-config-twbs-bootstrap": "^15.0.0"
+    "./themes": {
+      "sass": "./src/scss/themes/_index.scss"
+    },
+    "./base": {
+      "sass": "./src/scss/base/_index.scss"
+    },
+    "./font/*": {
+      "style": "./src/font/*",
+      "default": "./src/font/*"
+    },
+    "./src/font/*": {
+      "style": "./src/font/*",
+      "default": "./src/font/*"
+    },
+    "./css": {
+      "style": "./dist/css/ss.css",
+      "default": "./dist/css/ss.css"
+    },
+    "./css/min": {
+      "style": "./dist/css/ss.min.css",
+      "default": "./dist/css/ss.min.css"
+    },
+    "./scss/*": "./src/scss/*",
+    "./src/scss/*": "./src/scss/*",
+    "./stylelint": "./stylelint.config.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist/css/**/*.{css,map}",
+    "src/scss/**/*.scss",
+    "src/font/**/*.{css,woff2,txt}",
+    "stylelint.config.mjs",
+    "doc/**/*.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "*.scss",
+    "*.css"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
+  },
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build && NO_EMPTY=1 MINIFY=1 vite build",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test",
+    "test": "node --test tst/*.test.mjs",
+    "format": "prettier . --check",
+    "format:check": "prettier . --check",
+    "format:fix": "prettier . --write",
+    "lint": "eslint .",
+    "clean": "rm -rf dist .vite coverage",
+    "prepublishOnly": "npm run check && npm run build",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "coverage": "node --test --experimental-test-coverage --test-coverage-include=tst/helpers.mjs --test-coverage-include=stylelint.config.mjs --test-coverage-lines=95 --test-coverage-branches=80 --test-coverage-functions=80 tst/*.test.mjs"
+  },
+  "peerDependencies": {
+    "sass": "^1.93.0",
+    "stylescape": ">=0.5.1"
+  },
+  "peerDependenciesMeta": {
+    "sass": {
+      "optional": false
+    },
+    "stylescape": {
+      "optional": true
     }
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.4",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.9",
+    "sass": "^1.105.1",
+    "stylescape": "^0.5.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4"
+  }
 }

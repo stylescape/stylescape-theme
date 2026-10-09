@@ -1,0 +1,21 @@
+dist/
+node_modules/
+coverage/
+package-lock.json
+res/
+storybook-static/
+
+# Generated or synced from the repo template: formatting them here would
+# only fight the generator.
+.devcontainer/
+.vscode/
+.pre-commit-config.yaml
+.github/ISSUE_TEMPLATE/
+.github/*.md
+.github/FUNDING.yml
+.github/dependabot.yml
+.github/workflows/auto-assign.yml
+.github/workflows/codeql.yml
+.github/workflows/dependabot-auto-merge.yml
+.github/workflows/deploy_docs.yml
+.github/workflows/publish_package.yml

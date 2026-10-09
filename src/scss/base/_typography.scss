@@ -1,0 +1,40 @@
+// =============================================================================
+// base/typography — the voices
+// =============================================================================
+//
+// These mixins carry the heading's whole setting — face, weight, track,
+// leading — from the tokens, so a consumer's `.headline` and core's `h2`
+// cannot drift. In the template the tokens hold core's own heading setting
+// (the body face, bold, untracked, 1.2), so applying them changes nothing; a
+// brand theme changes the tokens, not these mixins.
+//
+// Mixins only: nothing here emits a rule until a consumer includes one. The
+// package root applies `heading` to h1-h6 at zero specificity; see
+// `index.scss`.
+// =============================================================================
+
+/// A heading at any size, as the heading tokens set it.
+@mixin heading {
+    font-family: var(--ss-font-family-heading);
+    font-weight: var(--ss-font-weight-heading);
+    letter-spacing: var(--ss-tracking-heading);
+    line-height: var(--ss-leading-heading);
+}
+
+/// Running text: the base face at its reading weight, with room between
+/// lines (core's `--ss-leading-normal`).
+@mixin body {
+    font-family: var(--ss-font-family-base);
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/// The small label above a heading or a column of links: quiet, not shouted.
+@mixin eyebrow {
+    font-family: var(--ss-font-family-base);
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    color: var(--ss-color-text-muted);
+}

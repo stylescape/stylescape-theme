@@ -1,0 +1,44 @@
+// =============================================================================
+// abstracts/breakpoints — two boundaries, and the two preferences
+// =============================================================================
+//
+// `narrow` is a phone: one column, the navigation behind a button. `wide`
+// is a desktop that can hold a headline beside its text. Between them a
+// layout should still work without either mixin, which is why there are
+// two boundaries and not five.
+//
+// The template takes both from core's own scale (`23-layout/_breakpoints`):
+// `narrow` is everything below core's `md` (768px), `wide` is core's `lg`
+// (1024px) and up. A brand theme sets its own.
+// =============================================================================
+
+$narrow: 47.98rem !default; // below core's `md`, as core's breakpoint-down
+$wide: 64rem !default; // core's `lg`
+
+@mixin narrow {
+    @media (max-width: $narrow) {
+        @content;
+    }
+}
+
+@mixin wide {
+    @media (min-width: $wide) {
+        @content;
+    }
+}
+
+/// Whoever would rather not see moving pictures does not get them.
+@mixin reduced-motion {
+    @media (prefers-reduced-motion: reduce) {
+        @content;
+    }
+}
+
+/// A pointer that can hover: hover effects only where they can be seen.
+@mixin hover {
+    @media (hover: hover) {
+        &:hover {
+            @content;
+        }
+    }
+}

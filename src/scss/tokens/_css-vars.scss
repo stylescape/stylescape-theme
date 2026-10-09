@@ -1,0 +1,226 @@
+// =============================================================================
+// tokens/css-vars — the template's `--ss-*` overrides
+//
+// Emitted UNLAYERED at `:root`. When this file is loaded through the package
+// root (core first), core's own token defaults are also unlayered at `:root`,
+// so plain source order makes these values win; core's component rules
+// (inside `@layer ss.*`) read the tokens at runtime via `var(--ss-*)` and pick
+// the theme up automatically. Loaded through `./tokens` there is no core at
+// all and this block simply *is* the token set.
+//
+// THIS BLOCK IS THE LIGHT THEME, and the default. It is emitted for `:root`
+// AND for `[data-theme="light"]`, as core 0.5 does, so a light island inside
+// a dark page or band re-declares the light values on itself (an inherited
+// dark value would otherwise win over core's layered light defaults).
+// In the template every
+// value equals core's default, so the package root renders exactly like core
+// does on its own; a brand theme copies this file unchanged and only edits
+// `_brand.scss` (and the `--theme-*` block at the end). The dark theme in
+// `themes/_dark.scss` applies under `data-theme="dark"` — on <html> for a
+// whole page, or on any one element for a dark band inside a light page.
+//
+// Token names follow stylescape core's lexicon
+// (`12-lexicon/_color-tokens.scss`, `_radius.scss`, `_shadow.scss`,
+// `_typescale.scss`). Do not invent names here — if a token is missing, add
+// it to core first. The deliberate exceptions, which core does not declare
+// yet but every fleet theme sets: `--ss-color-code-key`,
+// `--ss-font-family-heading`, `--ss-font-weight-heading`,
+// `--ss-tracking-heading`; and the `--theme-*` block at the end, for the
+// brand values core has no name for. A brand theme renames that prefix to
+// its own (`--mesmera-*`, `--geoid-*`, …).
+// =============================================================================
+
+@use "brand" as *;
+
+:root,
+[data-theme="light"] {
+    // No `color-scheme` here: core does not set one, and setting it at the
+    // bare `:root` repaints unstyled form controls. The dark theme sets it
+    // under its stamp.
+
+    // ------------------------------------------------------------------------
+    // Surface / Background
+    // ------------------------------------------------------------------------
+
+    --ss-color-background: #{$white};
+    --ss-color-foreground: #{$black};
+
+    --ss-color-surface: #{$white};
+    --ss-color-surface-alt: #{$gray-50};
+    --ss-color-surface-muted: #{$gray-60};
+    --ss-color-surface-hover: #{$gray-100};
+    --ss-color-surface-primary: #{$white};
+
+    --ss-color-surface-1: #{$gray-115};
+    --ss-color-surface-2: #{$gray-210};
+    --ss-color-surface-3: #{$gray-240};
+
+    --ss-color-fill: #{$white};
+    --ss-color-fill-muted: #{$gray-60};
+
+    --ss-color-backdrop: rgb(0 0 0 / 0.5);
+
+    // ------------------------------------------------------------------------
+    // Text
+    // ------------------------------------------------------------------------
+
+    --ss-color-text: #{$black};
+    --ss-color-text-default: #{$black};
+    --ss-color-text-primary: #{$black};
+    --ss-color-text-secondary: #{$gray-650};
+    --ss-color-text-muted: #{$gray-650};
+    --ss-color-muted: #{$gray-470};
+    --ss-color-muted-foreground: #{$gray-650};
+
+    // ------------------------------------------------------------------------
+    // Lines / Borders
+    // ------------------------------------------------------------------------
+
+    --ss-color-line: #{$gray-250};
+    --ss-color-line-primary: #{$black};
+    --ss-color-line-secondary: #{$gray-150};
+
+    --ss-color-border: #{$gray-250};
+    --ss-color-border-muted: #{$gray-150};
+    --ss-color-border-subtle: #{$gray-110};
+    // Boundaries of form controls: ≥ 3:1 on the surface (WCAG 1.4.11).
+    --ss-color-border-strong: #{$gray-395};
+
+    // ------------------------------------------------------------------------
+    // Brand / Accent
+    // ------------------------------------------------------------------------
+
+    --ss-color-primary: #{$black};
+    --ss-color-secondary: #{$gray-650};
+
+    --ss-color-accent: #{ink($accent)};
+    --ss-color-accent-bg: #{tint-bg($accent)};
+    --ss-color-accent-foreground: #{$white};
+    --ss-color-accent-highlight: #{$accent-dark};
+    --ss-color-accent-tertiary: #{$accent-light};
+    --ss-color-on-accent: #{$white};
+
+    --ss-color-highlight: #{tint-bg($accent)};
+    --ss-color-highlight-foreground: #{tint-fg($accent)};
+
+    // ------------------------------------------------------------------------
+    // Links / States
+    // ------------------------------------------------------------------------
+
+    // Darkened through `ink()` so link text clears AA; hover goes deeper,
+    // not paler, for the same reason.
+    --ss-color-link: #{ink($accent-link)};
+    --ss-color-link-hover: #{$accent-dark};
+    --ss-color-link-active: #{ink($accent)};
+    --ss-color-link-visited: #{ink($visited)};
+
+    --ss-color-focus: #{ink($accent-link)};
+    --ss-color-state-hover: #{$accent-dark};
+    --ss-color-state-active: #{ink($accent)};
+    --ss-color-state-link: #{ink($accent-link)};
+
+    // ------------------------------------------------------------------------
+    // Status / Feedback
+    // ------------------------------------------------------------------------
+
+    --ss-color-success: #{ink($success)};
+    --ss-color-success-bg: #{tint-bg($success)};
+    --ss-color-success-soft: #{tint-soft($success)};
+    --ss-color-success-foreground: #{tint-fg($success)};
+    --ss-color-on-success: #{$white};
+
+    --ss-color-warning: #{ink($warning)};
+    --ss-color-warning-bg: #{tint-bg($warning)};
+    --ss-color-warning-soft: #{tint-soft($warning)};
+    --ss-color-warning-foreground: #{tint-fg($warning)};
+    --ss-color-on-warning: #{$white};
+
+    --ss-color-error: #{ink($error)};
+    --ss-color-error-bg: #{tint-bg($error)};
+    --ss-color-error-soft: #{tint-soft($error)};
+    --ss-color-error-foreground: #{tint-fg($error)};
+    --ss-color-on-error: #{$white};
+
+    --ss-color-info: #{ink($info)};
+    --ss-color-info-bg: #{tint-bg($info)};
+    --ss-color-info-soft: #{tint-soft($info)};
+    --ss-color-info-foreground: #{tint-fg($info)};
+    --ss-color-on-info: #{$white};
+
+    // ------------------------------------------------------------------------
+    // Code / Keyboard — core's code block is dark in both themes
+    // ------------------------------------------------------------------------
+
+    --ss-color-code-bg: #{$code-bg};
+    --ss-color-code-background: #{$code-bg};
+    --ss-color-code-foreground: #{$code-fg};
+    --ss-color-code-key: #{$accent-light};
+    --ss-color-kbd-bg: #{$gray-60};
+
+    // ------------------------------------------------------------------------
+    // Shape and depth — not themed; see `_brand.scss`
+    // ------------------------------------------------------------------------
+
+    --ss-radius-none: 0;
+    --ss-radius-xs: #{$radius-xs};
+    --ss-radius-sm: #{$radius-sm};
+    --ss-radius-default: #{$radius-md};
+    --ss-radius-md: #{$radius-md};
+    --ss-radius-lg: #{$radius-lg};
+    --ss-radius-xl: #{$radius-xl};
+    --ss-radius-2xl: #{$radius-2xl};
+    --ss-radius-3xl: #{$radius-3xl};
+    --ss-radius-full: #{$radius-full};
+
+    --ss-a-shadow-color: #{$shadow-color};
+    --ss-a-shadow-color-heavy: #{$shadow-color-heavy};
+
+    // ------------------------------------------------------------------------
+    // Legacy `--color_*` compatibility
+    //
+    // Core's relocated surfaces still paint the page with
+    // `body { background: var(--color_fill_primary) }` and set text in
+    // `--color_text_primary`. Aliasing the two to the tokens lets them follow
+    // a brand palette and the dark theme; their light values are core's own.
+    // Delete once core drops the legacy names.
+    // ------------------------------------------------------------------------
+
+    --color_fill_primary: var(--ss-color-background);
+    --color_text_primary: var(--ss-color-text-primary);
+
+    // ------------------------------------------------------------------------
+    // Type
+    // ------------------------------------------------------------------------
+
+    --ss-font-family-base: #{$font-sans};
+    --ss-font-family-sans: #{$font-sans};
+    --ss-font-family-heading: #{$font-heading};
+    --ss-font-family-display: #{$font-display};
+    --ss-font-family-mono: #{$font-mono};
+
+    --ss-font-weight-heading: #{$heading-weight};
+    --ss-tracking-heading: #{$heading-tracking};
+    --ss-leading-heading: #{$heading-leading};
+
+    // ------------------------------------------------------------------------
+    // The brand's own — `--theme-*`, not `--ss-*`
+    //
+    // The placeholders for what a brand has and core has no name for: the
+    // mark's colour, the ground it sits on, the alternate section ground and
+    // one gradient. They are the same in both themes; a mark does not change
+    // colour when the page goes dark. Rename the prefix when you copy the
+    // template.
+    //
+    // The gradient carries white text (an announcement bar), so every stop
+    // has to hold white at WCAG AA; `tst/theme.test.mjs` checks each one.
+    // ------------------------------------------------------------------------
+
+    --theme-accent: #{$accent};
+    --theme-white: #{$white};
+    --theme-paper: #{$gray-50};
+    --theme-gradient: linear-gradient(
+        90deg,
+        #{$accent-dark} 0%,
+        #{$gray-700} 100%
+    );
+}
