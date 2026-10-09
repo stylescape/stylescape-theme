@@ -8,13 +8,14 @@
 //
 //   1. core   — the full stylescape framework. Its component/utility rules
 //               live inside `@layer ss.*` cascade layers and consume runtime
-//               `var(--ss-*)` tokens; its token defaults are emitted
-//               UNLAYERED at `:root`.
-//   2. tokens — the theme's values, also UNLAYERED at `:root` but AFTER
-//               core, so source order makes them win over core's defaults
-//               while every `ss.*` rule keeps reading them at runtime. In
-//               the template they ARE core's defaults.
-//   3. themes — the dark variant, under `data-theme="dark"`.
+//               `var(--ss-*)` tokens; since 0.5 its colour defaults live in
+//               `@layer ss.lexicon` (the rest still unlayered at `:root`).
+//   2. tokens — the theme's values, UNLAYERED at `:root` and
+//               `[data-theme="light"]`, AFTER core, so they win over core's
+//               defaults while every `ss.*` rule keeps reading them at
+//               runtime. In the template they ARE core's defaults.
+//   3. themes — the dark variant, under `data-theme="dark"` and, when the
+//               OS prefers dark, `data-theme="auto"`.
 //   4. voices — the heading setting on h1-h6, and a ground for a dark band.
 //
 // A site that wants only the tokens and none of core takes `./tokens` and
@@ -49,9 +50,10 @@
     @include typography.heading;
 }
 
-// A band stamped dark paints its own ground and text. On <html> that is
-// core's body rule doing it already; on a <section> nothing else would.
-[data-theme="dark"]:not(:root) {
+// A band stamped with a theme (dark, light inside a dark page, or auto)
+// paints its own ground and text. On <html> that is core's body rule doing
+// it already; on a <section> nothing else would.
+[data-theme]:not(:root) {
     background-color: var(--ss-color-background);
     color: var(--ss-color-text);
 }

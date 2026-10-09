@@ -25,9 +25,10 @@ these steps.
    `$font-heading`, and list the latin cuts in `$preload`
    (`base/_fonts.scss`). Add a `NOTICE` for third-party faces.
 6. **Tests** — delete `tst/defaults.test.mjs` (it holds the template to
-   core's values, which a brand no longer has). Remove `LIGHT_TODO` from
-   `tst/theme.test.mjs`, so the light theme must clear WCAG AA like the
-   dark one, and update the pinned values there and in `tst/core.test.mjs`.
+   core's values, which a brand no longer has). The light and dark
+   WCAG AA checks in `tst/theme.test.mjs` stay and must pass with the
+   brand's values; update the pinned values there and in
+   `tst/core.test.mjs`.
    Add a provenance test (mesmera's `tst/brand.test.mjs` reads the logo).
 7. **Docs** — rewrite `README.md`, `CHANGELOG.md` and `doc/` for the brand;
    delete this page.

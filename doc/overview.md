@@ -29,7 +29,6 @@ swatch in `tokens/_brand.scss` says which core value it mirrors.
 
 ## The dark theme
 
-Core 0.4's own dark override sets only the surface and the primary text.
-The template fills in the rest from core's grey ramp and lighter steps of
-core's hues, and holds every text pair to WCAG AA; see
-[colors.md](colors.md).
+Core 0.5 ships a complete dark theme, and the template's dark set is core's,
+value for value, plus the few tokens a dark band needs re-declared. Every
+text pair is held to WCAG AA in both themes; see [colors.md](colors.md).

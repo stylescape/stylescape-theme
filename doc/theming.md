@@ -2,8 +2,10 @@
 
 ## Light by default
 
-`tokens/_css-vars.scss` emits the light set at bare `:root`. A page with no
-stamp renders in core's default palette. No `color-scheme` is set there:
+`tokens/_css-vars.scss` emits the light set at `:root` and on
+`[data-theme="light"]`, so a light island inside a dark page or band
+re-declares the light values on itself. A page with no stamp renders in
+core's default palette. No `color-scheme` is set there:
 core does not set one, and setting it repaints unstyled form controls.
 
 ## Dark, on a page or a band
@@ -14,8 +16,11 @@ Custom properties inherit, so a `<section data-theme="dark">` re-themes
 everything inside it, and the package root gives that section its own
 ground and text colour.
 
-There is no `prefers-color-scheme` block. A consumer that wants to follow
-the OS stamps `data-theme` from script.
+## Following the OS
+
+As in core 0.5, `data-theme="auto"` takes the dark set when the OS prefers
+dark (`@media (prefers-color-scheme: dark)`). Without the attribute the
+page stays light whatever the OS prefers.
 
 ## Faded colours
 

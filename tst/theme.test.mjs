@@ -14,11 +14,10 @@
 //   4. The brand's own values being themed. A mark does not change colour
 //      when the page goes dark.
 //
-// ONE TEMPLATE EXCEPTION: core's default light palette does not clear AA
-// for its accent, link and status hues on white (the steel blue `#3696c1`
-// is 3.4:1). The template mirrors core, so the light AA checks run as
-// `todo`: they report, they do not fail. A brand theme copied from here
-// removes `LIGHT_TODO` and must pass them, as stylescape-mesmera does.
+// Core 0.5 darkens its light accent, link and status hues to AA (the steel
+// blue `#3696c1`, 3.4:1 on white, becomes `rgb(40 113 146)`), and the
+// template mirrors it through `ink()`, so the light AA checks hold here as
+// they must in every brand theme copied from it.
 // =============================================================================
 
 import { test } from "node:test";
@@ -26,10 +25,7 @@ import assert from "node:assert/strict";
 import { compile, declarationsIn, contrast } from "./helpers.mjs";
 
 const DARK = '[data-theme="dark"]';
-
-/** Delete in a brand theme: the light set has to clear AA there. */
-const LIGHT_TODO =
-    "core's default palette, mirrored by the template, is under AA here";
+const LIGHT = ':root, [data-theme="light"]';
 
 /** Every token that carries real text and therefore has to clear AA. */
 const TEXT_TOKENS = [
@@ -55,11 +51,12 @@ const GROUNDS = [
 
 test("tokens/ emits the light set, the default, unlayered at :root", () => {
     const css = compile("tokens/_index.scss");
-    const root = declarationsIn(css, ":root");
+    const root = declarationsIn(css, LIGHT);
 
     assert.equal(root["--ss-color-background"], "#ffffff");
-    assert.equal(root["--ss-color-accent"], "#3696c1");
-    assert.equal(root["--theme-accent"], root["--ss-color-accent"]);
+    // The mark keeps the hue as drawn; the accent as text is its AA ink.
+    assert.equal(root["--theme-accent"], "#3696c1");
+    assert.equal(root["--ss-color-accent"], "rgb(40, 113, 146)");
 
     // Emitted unlayered: a token inside `@layer` cannot override core's
     // unlayered defaults.
@@ -67,7 +64,7 @@ test("tokens/ emits the light set, the default, unlayered at :root", () => {
 });
 
 test("tokens/ sets every font family the theme reads", () => {
-    const root = declarationsIn(compile("tokens/_index.scss"), ":root");
+    const root = declarationsIn(compile("tokens/_index.scss"), LIGHT);
     for (const name of [
         "--ss-font-family-base",
         "--ss-font-family-sans",
@@ -88,14 +85,34 @@ test("themes/ applies the dark set to ANY stamped element", () => {
     assert.equal(dark["--ss-color-text"], "#f2f2f2");
 
     // Not `:root[data-theme=dark]`: a <section data-theme="dark"> has to
-    // flip too. And no media query: the default page is light whatever the
-    // OS prefers.
+    // flip too.
     assert.doesNotMatch(css, /:root\[data-theme/);
-    assert.doesNotMatch(css, /prefers-color-scheme/);
+
+    // `auto` follows the OS, and only `auto`: a page without the attribute
+    // stays light whatever the OS prefers.
+    const media = [
+        ...css.matchAll(
+            /@media[^{]*prefers-color-scheme:\s*dark[^{]*\{([\s\S]*?)\}\s*\}/g,
+        ),
+    ];
+    assert.equal(media.length, 1, "one prefers-color-scheme block");
+    assert.match(media[0][1], /^\s*\[data-theme=auto\]\s*\{/);
+    const auto = declarationsIn(css, '[data-theme="auto"]');
+    assert.deepEqual(auto, dark, "auto (dark OS) is the dark set");
+});
+
+test("a light island re-declares the light set on itself", () => {
+    // Inside a dark band, an element stamped light must not inherit the dark
+    // values: core 0.5 declares its light defaults on `[data-theme=light]`
+    // in a layer, so the theme has to as well, unlayered, or core's light
+    // values (not the theme's) would paint the island.
+    const light = declarationsIn(compile("tokens/_index.scss"), LIGHT);
+    assert.equal(light["--ss-color-background"], "#ffffff");
+    assert.ok(Object.keys(light).length > 80);
 });
 
 test("every dark colour token has a light counterpart, and vice versa", () => {
-    const light = declarationsIn(compile("tokens/_index.scss"), ":root");
+    const light = declarationsIn(compile("tokens/_index.scss"), LIGHT);
     const dark = declarationsIn(compile("themes/_index.scss"), DARK);
     const themed = (n) => n.startsWith("--ss-color-");
 
@@ -110,7 +127,7 @@ test("every dark colour token has a light counterpart, and vice versa", () => {
 test("white text reads on every stop of the brand gradient", () => {
     // The gradient is drawn under white words (an announcement bar), and
     // on a narrow screen those words reach either end of it.
-    const root = declarationsIn(compile("tokens/_index.scss"), ":root");
+    const root = declarationsIn(compile("tokens/_index.scss"), LIGHT);
     const stops = root["--theme-gradient"].match(/#[0-9a-f]{6}/gi);
     assert.ok(stops && stops.length >= 2, root["--theme-gradient"]);
     for (const stop of stops) {
@@ -132,6 +149,17 @@ test("the --theme-* brand values are not themed", () => {
  */
 function hex(value) {
     if (value.startsWith("#")) return value;
+    // `rgb(40, 113, 146)`: an `ink()` colour, snapped to whole channels.
+    const n = value.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    if (n) {
+        return (
+            "#" +
+            n
+                .slice(1, 4)
+                .map((c) => Number(c).toString(16).padStart(2, "0"))
+                .join("")
+        );
+    }
     const m = value.match(/^rgb\(([\d.]+)%,\s*([\d.]+)%,\s*([\d.]+)%\)$/);
     assert.ok(m, `cannot measure ${value}`);
     return (
@@ -147,55 +175,41 @@ function hex(value) {
     );
 }
 
-for (const [label, file, selector, todo] of [
-    ["light", "tokens/_index.scss", ":root", LIGHT_TODO],
-    ["dark", "themes/_index.scss", DARK, false],
+for (const [label, file, selector] of [
+    ["light", "tokens/_index.scss", LIGHT],
+    ["dark", "themes/_index.scss", DARK],
 ]) {
-    test(
-        `the ${label} theme meets WCAG AA for text on every ground`,
-        { todo },
-        () => {
-            const t = declarationsIn(compile(file), selector);
+    test(`the ${label} theme meets WCAG AA for text on every ground`, () => {
+        const t = declarationsIn(compile(file), selector);
 
-            for (const ground of GROUNDS) {
-                const bg = t[ground];
-                assert.ok(bg, `${label}: ${ground} is not set`);
+        for (const ground of GROUNDS) {
+            const bg = t[ground];
+            assert.ok(bg, `${label}: ${ground} is not set`);
 
-                for (const name of TEXT_TOKENS) {
-                    const ratio = contrast(hex(t[name]), hex(bg));
-                    assert.ok(
-                        ratio >= 4.5,
-                        `${label}: ${name} (${t[name]}) is ` +
-                            `${ratio.toFixed(2)}:1 on ${ground} (${bg})`,
-                    );
-                }
-            }
-        },
-    );
-
-    test(
-        `the ${label} theme's on-colours read on their fills`,
-        { todo },
-        () => {
-            const t = declarationsIn(compile(file), selector);
-            for (const role of [
-                "accent",
-                "success",
-                "warning",
-                "error",
-                "info",
-            ]) {
-                const fill = t[`--ss-color-${role}`];
-                const ink = t[`--ss-color-on-${role}`];
-                const ratio = contrast(hex(ink), hex(fill));
+            for (const name of TEXT_TOKENS) {
+                const ratio = contrast(hex(t[name]), hex(bg));
                 assert.ok(
                     ratio >= 4.5,
-                    `${label}: on-${role} (${ink}) is ${ratio.toFixed(2)}:1 ` +
-                        `on ${role} (${fill})`,
+                    `${label}: ${name} (${t[name]}) is ` +
+                        `${ratio.toFixed(2)}:1 on ${ground} (${bg})`,
                 );
             }
-        },
-    );
+        }
+    });
+
+    test(`the ${label} theme's on-colours read on their fills`, () => {
+        const t = declarationsIn(compile(file), selector);
+        for (const role of ["accent", "success", "warning", "error", "info"]) {
+            const fill = t[`--ss-color-${role}`];
+            const ink = t[`--ss-color-on-${role}`];
+            const ratio = contrast(hex(ink), hex(fill));
+            assert.ok(
+                ratio >= 4.5,
+                `${label}: on-${role} (${ink}) is ${ratio.toFixed(2)}:1 ` +
+                    `on ${role} (${fill})`,
+            );
+        }
+    });
 
     test(`the ${label} theme's code text reads on the code surface`, () => {
         const t = declarationsIn(compile(file), selector);

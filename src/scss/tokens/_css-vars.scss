@@ -8,7 +8,11 @@
 // the theme up automatically. Loaded through `./tokens` there is no core at
 // all and this block simply *is* the token set.
 //
-// THIS BLOCK IS THE LIGHT THEME, and the default. In the template every
+// THIS BLOCK IS THE LIGHT THEME, and the default. It is emitted for `:root`
+// AND for `[data-theme="light"]`, as core 0.5 does, so a light island inside
+// a dark page or band re-declares the light values on itself (an inherited
+// dark value would otherwise win over core's layered light defaults).
+// In the template every
 // value equals core's default, so the package root renders exactly like core
 // does on its own; a brand theme copies this file unchanged and only edits
 // `_brand.scss` (and the `--theme-*` block at the end). The dark theme in
@@ -28,7 +32,8 @@
 
 @use "brand" as *;
 
-:root {
+:root,
+[data-theme="light"] {
     // No `color-scheme` here: core does not set one, and setting it at the
     // bare `:root` repaints unstyled form controls. The dark theme sets it
     // under its stamp.
@@ -64,7 +69,7 @@
     --ss-color-text-primary: #{$black};
     --ss-color-text-secondary: #{$gray-650};
     --ss-color-text-muted: #{$gray-650};
-    --ss-color-muted: #{$gray-350};
+    --ss-color-muted: #{$gray-470};
     --ss-color-muted-foreground: #{$gray-650};
 
     // ------------------------------------------------------------------------
@@ -73,11 +78,13 @@
 
     --ss-color-line: #{$gray-250};
     --ss-color-line-primary: #{$black};
-    --ss-color-line-secondary: #{$gray-250};
+    --ss-color-line-secondary: #{$gray-150};
 
     --ss-color-border: #{$gray-250};
     --ss-color-border-muted: #{$gray-150};
     --ss-color-border-subtle: #{$gray-110};
+    // Boundaries of form controls: ≥ 3:1 on the surface (WCAG 1.4.11).
+    --ss-color-border-strong: #{$gray-395};
 
     // ------------------------------------------------------------------------
     // Brand / Accent
@@ -86,7 +93,7 @@
     --ss-color-primary: #{$black};
     --ss-color-secondary: #{$gray-650};
 
-    --ss-color-accent: #{$accent};
+    --ss-color-accent: #{ink($accent)};
     --ss-color-accent-bg: #{tint-bg($accent)};
     --ss-color-accent-foreground: #{$white};
     --ss-color-accent-highlight: #{$accent-dark};
@@ -100,39 +107,41 @@
     // Links / States
     // ------------------------------------------------------------------------
 
-    --ss-color-link: #{$accent-link};
-    --ss-color-link-hover: #{$accent-hover};
-    --ss-color-link-active: #{$accent};
-    --ss-color-link-visited: #{$visited};
+    // Darkened through `ink()` so link text clears AA; hover goes deeper,
+    // not paler, for the same reason.
+    --ss-color-link: #{ink($accent-link)};
+    --ss-color-link-hover: #{$accent-dark};
+    --ss-color-link-active: #{ink($accent)};
+    --ss-color-link-visited: #{ink($visited)};
 
-    --ss-color-focus: #{$accent-link};
-    --ss-color-state-hover: #{$accent-hover};
-    --ss-color-state-active: #{$accent};
-    --ss-color-state-link: #{$accent-link};
+    --ss-color-focus: #{ink($accent-link)};
+    --ss-color-state-hover: #{$accent-dark};
+    --ss-color-state-active: #{ink($accent)};
+    --ss-color-state-link: #{ink($accent-link)};
 
     // ------------------------------------------------------------------------
     // Status / Feedback
     // ------------------------------------------------------------------------
 
-    --ss-color-success: #{$success};
+    --ss-color-success: #{ink($success)};
     --ss-color-success-bg: #{tint-bg($success)};
     --ss-color-success-soft: #{tint-soft($success)};
     --ss-color-success-foreground: #{tint-fg($success)};
     --ss-color-on-success: #{$white};
 
-    --ss-color-warning: #{$warning};
+    --ss-color-warning: #{ink($warning)};
     --ss-color-warning-bg: #{tint-bg($warning)};
     --ss-color-warning-soft: #{tint-soft($warning)};
     --ss-color-warning-foreground: #{tint-fg($warning)};
     --ss-color-on-warning: #{$white};
 
-    --ss-color-error: #{$error};
+    --ss-color-error: #{ink($error)};
     --ss-color-error-bg: #{tint-bg($error)};
     --ss-color-error-soft: #{tint-soft($error)};
     --ss-color-error-foreground: #{tint-fg($error)};
     --ss-color-on-error: #{$white};
 
-    --ss-color-info: #{$info};
+    --ss-color-info: #{ink($info)};
     --ss-color-info-bg: #{tint-bg($info)};
     --ss-color-info-soft: #{tint-soft($info)};
     --ss-color-info-foreground: #{tint-fg($info)};

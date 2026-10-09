@@ -25,8 +25,14 @@ import {
 const coreCss = compileSource(
     '@use "pkg:stylescape/scss" as core with ($scapepress-parity: false);',
 );
-const core = declarationsIn(coreCss, ":root");
-const light = declarationsIn(compile("tokens/_index.scss"), ":root");
+// Core 0.5 emits its colour tokens for `:root, [data-theme="light"]` inside
+// `@layer ss.lexicon`, and the rest (type, shape, legacy names) at `:root`.
+const LIGHT = ':root, [data-theme="light"]';
+const core = {
+    ...declarationsIn(coreCss, ":root"),
+    ...declarationsIn(coreCss, LIGHT),
+};
+const light = declarationsIn(compile("tokens/_index.scss"), LIGHT);
 
 /** Names the template sets that core does not declare (yet). */
 const NOT_IN_CORE = new Set([
@@ -70,15 +76,36 @@ test("the tokens not in core still say what core does", () => {
     assert.equal(light["--ss-leading-heading"], "1.2");
 });
 
-test("the dark set keeps the two values core's own dark override sets", () => {
-    const coreDark = declarationsIn(coreCss, '[data-theme="dark"]');
-    const dark = declarationsIn(
-        compile("themes/_index.scss"),
-        "[data-theme=dark]",
+// Core 0.5 has a complete dark theme; the template's dark set is core's,
+// value for value, under both of core's entry points.
+const coreDark = declarationsIn(coreCss, '[data-theme="dark"]');
+const dark = declarationsIn(
+    compile("themes/_index.scss"),
+    '[data-theme="dark"]',
+);
+const darkCompared = Object.keys(coreDark).filter((n) =>
+    n.startsWith("--ss-color-"),
+);
+
+test("core's dark set is still complete", () => {
+    assert.ok(
+        darkCompared.length > 60,
+        `only ${darkCompared.length} compared`,
     );
-    for (const name of ["--ss-color-surface", "--ss-color-text-primary"]) {
-        assert.equal(dark[name], coreDark[name], name);
-    }
+});
+
+for (const name of darkCompared) {
+    test(`${name} (dark) is core's dark default`, () => {
+        assert.equal(
+            resolve(dark, dark[name]),
+            resolve(coreDark, coreDark[name]),
+            `${name}: template ${dark[name]} vs core ${coreDark[name]}`,
+        );
+    });
+}
+
+test("dark color-scheme matches core's", () => {
+    assert.equal(dark["color-scheme"], coreDark["color-scheme"]);
 });
 
 test("the template sets no color-scheme at the bare :root", () => {

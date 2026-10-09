@@ -7,15 +7,18 @@
 // and follows; the package root gives the stamped element its own ground and
 // text colour so the band paints without the consumer repeating it.
 //
-// No `prefers-color-scheme` block: the default page is light, and a consumer
-// that wants to follow the OS stamps `data-theme` from script.
+// The entry points are core 0.5's: `data-theme="dark"` is always dark,
+// `data-theme="auto"` follows `prefers-color-scheme`, and `data-theme="light"`
+// (in tokens/) re-declares the light set. A page with no attribute is light
+// whatever the OS prefers.
 //
-// The derivation: core 0.4's own dark override sets only two colours (the
-// surface `#1c1c1c` and the text `#f2f2f2`, both kept here). The rest is
-// filled in from core's grey ramp: the ground is `$gray-900`, surfaces climb
-// UP from it, and every hue moves to a lighter step of itself (`tint-lit()`,
-// or the accent's own light step) so it carries text on the dark ground.
-// Shape and type do not change — they are not themed.
+// The values are core 0.5's complete dark theme (`33-overrides/_dark.scss`):
+// the ground is `$gray-900`, surfaces climb UP from it, and every hue is set
+// as written (the light theme darkens them through `ink()`; on the dark
+// ground they read as they are), with near-black text on the fills. The
+// tokens core's dark set leaves alone but a dark band needs re-declared
+// (`-text-default`, `-text-secondary`, `-code-foreground`, `-code-key`) are
+// set here too. Shape and type do not change — they are not themed.
 // =============================================================================
 
 @use "../tokens/brand" as *;
@@ -29,17 +32,17 @@
     --ss-color-foreground: #{$gray-75};
 
     --ss-color-surface: #{$gray-780};
-    --ss-color-surface-alt: #{$gray-800};
-    --ss-color-surface-muted: #{$gray-800};
-    --ss-color-surface-hover: #{$gray-700};
-    --ss-color-surface-primary: #{$gray-900};
+    --ss-color-surface-alt: #{$gray-770};
+    --ss-color-surface-muted: #{$gray-750};
+    --ss-color-surface-hover: #{$gray-720};
+    --ss-color-surface-primary: #{$gray-780};
 
-    --ss-color-surface-1: #{$gray-800};
+    --ss-color-surface-1: #{$gray-740};
     --ss-color-surface-2: #{$gray-700};
-    --ss-color-surface-3: #{$gray-600};
+    --ss-color-surface-3: #{$gray-660};
 
-    --ss-color-fill: #{$gray-700};
-    --ss-color-fill-muted: #{$gray-800};
+    --ss-color-fill: #{$gray-780};
+    --ss-color-fill-muted: #{$gray-750};
 
     --ss-color-backdrop: rgb(0 0 0 / 0.7);
 
@@ -48,81 +51,82 @@
     --ss-color-text: #{$gray-75};
     --ss-color-text-default: #{$gray-75};
     --ss-color-text-primary: #{$gray-75};
-    --ss-color-text-secondary: #{$gray-200};
-    --ss-color-text-muted: #{$gray-300};
-    --ss-color-muted: #{$gray-700};
-    --ss-color-muted-foreground: #{$gray-300};
+    --ss-color-text-secondary: #{$gray-280};
+    --ss-color-text-muted: #{$gray-280};
+    --ss-color-muted: #{$gray-390};
+    --ss-color-muted-foreground: #{$gray-280};
 
     // --- Lines / Borders -----------------------------------------------------
 
-    --ss-color-line: #{$gray-600};
+    --ss-color-line: #{$gray-660};
     --ss-color-line-primary: #{$gray-75};
-    --ss-color-line-secondary: #{$gray-700};
+    --ss-color-line-secondary: #{$gray-740};
 
-    --ss-color-border: #{$gray-600};
+    --ss-color-border: #{$gray-610};
     --ss-color-border-muted: #{$gray-700};
-    --ss-color-border-subtle: #{$gray-700};
+    --ss-color-border-subtle: #{$gray-740};
+    --ss-color-border-strong: #{$gray-450};
 
     // --- Brand / Accent ------------------------------------------------------
 
     --ss-color-primary: #{$gray-75};
-    --ss-color-secondary: #{$gray-300};
+    --ss-color-secondary: #{$gray-550};
 
-    --ss-color-accent: #{$accent-light};
+    --ss-color-accent: #{$accent};
     --ss-color-accent-bg: #{tint-night($accent)};
     --ss-color-accent-foreground: #{$gray-900};
-    --ss-color-accent-highlight: #{$accent-hover};
-    --ss-color-accent-tertiary: #{$accent-link};
+    --ss-color-accent-highlight: #{$accent-light};
+    --ss-color-accent-tertiary: #{$accent-dark};
     --ss-color-on-accent: #{$gray-900};
 
     --ss-color-highlight: #{tint-night($accent)};
-    --ss-color-highlight-foreground: #{$gray-75};
+    --ss-color-highlight-foreground: #{tint-lit($accent)};
 
     // --- Links / States ------------------------------------------------------
 
-    --ss-color-link: #{$accent-light};
+    --ss-color-link: #{$accent-link};
     --ss-color-link-hover: #{$accent-hover};
-    --ss-color-link-active: #{$accent-hover};
-    --ss-color-link-visited: #{tint-lit($visited)};
+    --ss-color-link-active: #{$accent};
+    --ss-color-link-visited: #{$visited};
 
-    --ss-color-focus: #{$accent-light};
+    --ss-color-focus: #{$accent-link};
     --ss-color-state-hover: #{$accent-hover};
-    --ss-color-state-active: #{$accent-hover};
-    --ss-color-state-link: #{$accent-light};
+    --ss-color-state-active: #{$accent};
+    --ss-color-state-link: #{$accent-link};
 
     // --- Status / Feedback ---------------------------------------------------
 
-    --ss-color-success: #{tint-lit($success)};
+    --ss-color-success: #{$success};
     --ss-color-success-bg: #{tint-night($success)};
-    --ss-color-success-soft: #{$gray-780};
+    --ss-color-success-soft: #{tint-night-soft($success)};
     --ss-color-success-foreground: #{tint-lit($success)};
     --ss-color-on-success: #{$gray-900};
 
-    --ss-color-warning: #{tint-lit($warning)};
+    --ss-color-warning: #{$warning};
     --ss-color-warning-bg: #{tint-night($warning)};
-    --ss-color-warning-soft: #{$gray-780};
+    --ss-color-warning-soft: #{tint-night-soft($warning)};
     --ss-color-warning-foreground: #{tint-lit($warning)};
     --ss-color-on-warning: #{$gray-900};
 
-    --ss-color-error: #{tint-lit($error)};
+    --ss-color-error: #{$error};
     --ss-color-error-bg: #{tint-night($error)};
-    --ss-color-error-soft: #{$gray-780};
+    --ss-color-error-soft: #{tint-night-soft($error)};
     --ss-color-error-foreground: #{tint-lit($error)};
     --ss-color-on-error: #{$gray-900};
 
-    --ss-color-info: #{tint-lit($info)};
+    --ss-color-info: #{$info};
     --ss-color-info-bg: #{tint-night($info)};
-    --ss-color-info-soft: #{$gray-780};
+    --ss-color-info-soft: #{tint-night-soft($info)};
     --ss-color-info-foreground: #{tint-lit($info)};
     --ss-color-on-info: #{$gray-900};
 
     // --- Code / Keyboard -----------------------------------------------------
 
-    --ss-color-code-bg: #{$code-bg};
-    --ss-color-code-background: #{$code-bg};
+    --ss-color-code-bg: #{$code-bg-dark};
+    --ss-color-code-background: #{$code-bg-dark};
     --ss-color-code-foreground: #{$code-fg};
     --ss-color-code-key: #{$accent-light};
-    --ss-color-kbd-bg: #{$gray-700};
+    --ss-color-kbd-bg: #{$gray-750};
 
     // --- Depth ---------------------------------------------------------------
 
@@ -133,4 +137,11 @@
 // Any element, <html> included: a page or a band.
 [data-theme="dark"] {
     @include values;
+}
+
+// `auto` follows the OS; a page or band without the attribute stays light.
+@media (prefers-color-scheme: dark) {
+    [data-theme="auto"] {
+        @include values;
+    }
 }

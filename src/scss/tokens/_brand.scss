@@ -1,11 +1,13 @@
 @use "sass:color";
+@use "sass:math";
 @use "sass:string";
 
 // =============================================================================
 // tokens/brand — the placeholder palette, faces and shapes
 //
 // THIS IS THE TEMPLATE. Every value in this file is stylescape core's own
-// default (core 0.4, `12-lexicon/`), copied here so a new theme starts from
+// default (core 0.5.1, `12-lexicon/` and the dark set in
+// `33-overrides/_dark.scss`), copied here so a new theme starts from
 // a package that renders exactly like core and has every knob already in
 // place. `tst/defaults.test.mjs` compiles core and this package side by side
 // and fails if a light `--ss-*` value here stops matching core's.
@@ -37,9 +39,10 @@
 $white: #ffffff !default; // page, surface, the ink on fills
 $black: #000000 !default; // text, foreground, line-primary
 
-// Core's ramp is the steps 50-900 marked `ramp`; core also writes a dozen
-// greys as literals inside its semantic roles, and they sit between the
-// ramp steps here, numbered by where they fall in lightness.
+// Core's ramp is the steps 50-900 marked `ramp`; core also writes a few
+// dozen greys as literals inside its semantic roles (light and dark), and
+// they sit between the ramp steps here, numbered by where they fall in
+// lightness.
 
 $gray-50: #fafafa !default; // ramp — surface-alt
 $gray-60: #f5f5f5 !default; // surface-muted, fill-muted, kbd
@@ -47,43 +50,56 @@ $gray-75: #f2f2f2 !default; // text (dark) — core's own dark override
 $gray-100: #f0f0f0 !default; // ramp — surface-hover
 $gray-110: #ededed !default; // border-subtle
 $gray-115: #ececec !default; // surface-1
-$gray-150: #e5e5e5 !default; // border-muted
+$gray-150: #e5e5e5 !default; // border-muted, line-secondary
 $gray-200: #e0e0e0 !default; // ramp — secondary text (dark)
 $gray-210: #dedede !default; // surface-2
 $gray-240: #cfcfcf !default; // surface-3
 $gray-250: #cccccc !default; // line, border
+$gray-280: #b8b8b8 !default; // muted text (dark)
 $gray-300: #b3b3b3 !default; // ramp — muted text (dark)
-$gray-350: #a0a0a0 !default; // the muted chip
+$gray-390: #8c8c8c !default; // the muted chip (dark)
+$gray-395: #8a8a8a !default; // border-strong: control boundaries, 3:1
 $gray-400: #888888 !default; // ramp
+$gray-450: #7a7a7a !default; // border-strong (dark)
+$gray-470: #707070 !default; // the muted chip, AA on surface-alt
 $gray-500: #666666 !default; // ramp
-$gray-600: #4a4a4a !default; // ramp — lines (dark)
+$gray-550: #5a5a5a !default; // secondary (dark)
+$gray-600: #4a4a4a !default; // ramp
+$gray-610: #474747 !default; // border (dark)
 $gray-650: #414141 !default; // muted and secondary text
-$gray-700: #333333 !default; // ramp — fill, hover (dark)
-$gray-780: #1c1c1c !default; // surface (dark) — core's own dark override
-$gray-800: #1a1a1a !default; // ramp — raised ground (dark)
+$gray-660: #3d3d3d !default; // line, surface-3 (dark)
+$gray-700: #333333 !default; // ramp — surface-2, border-muted (dark)
+$gray-720: #2e2e2e !default; // surface-hover (dark)
+$gray-740: #2a2a2a !default; // surface-1, line-secondary (dark)
+$gray-750: #262626 !default; // surface-muted, fill-muted, kbd (dark)
+$gray-770: #202020 !default; // surface-alt (dark)
+$gray-780: #1c1c1c !default; // surface, fill (dark)
+$gray-800: #1a1a1a !default; // ramp
 $gray-900: #111111 !default; // ramp — page ground (dark)
 
 // -----------------------------------------------------------------------------
 // Accent — core's steel-blue family (hue.gl N24xx)
 // -----------------------------------------------------------------------------
 //
-// Core 0.4 resolves these from `hue_color()`; the hex each one resolves to
-// is written out here so the template carries no dependency on hue.gl.
+// Core resolves these from `hue_color()`; the hex each one resolves to is
+// written out here so the template carries no dependency on hue.gl. Core
+// 0.5 sets them as written in the dark theme, and in the light theme passes
+// the ones that carry text through `ink()` below (darkened to WCAG AA).
 
 $accent: #3696c1 !default; // N2405 — accent, link-active, state-active
 $accent-dark: #346a85 !default; // N2407 — accent-highlight
-$accent-light: #8abedc !default; // N2403 — accent-tertiary; accent (dark)
+$accent-light: #8abedc !default; // N2403 — accent-tertiary; highlight (dark)
 $accent-link: #65aace !default; // N2404 — link, focus, state-link
-$accent-hover: #acd2e9 !default; // N2402 — link-hover, state-hover
+$accent-hover: #acd2e9 !default; // N2402 — link-hover, state-hover (dark)
 $visited: #87a2d6 !default; // N2704 — link-visited
 
 // -----------------------------------------------------------------------------
-// Status — core's blue / violet / mauve feedback set
+// Status — core's green / amber / red / indigo feedback set (core 0.5)
 // -----------------------------------------------------------------------------
 
-$success: #5192c8 !default; // N2555
-$warning: #9582c2 !default; // N3005
-$error: #b577ac !default; // N3305
+$success: #559a6a !default; // N1505
+$warning: #b57f55 !default; // N0605
+$error: #c4756e !default; // N0305
 $info: #6a8dca !default; // N2705
 
 // Core derives the tints of every hue with the same three mixes; so does
@@ -104,14 +120,63 @@ $info: #6a8dca !default; // N2705
     @return color.mix(#111111, $c, 62%);
 }
 
-/// A light tint of the hue that still reads on the dark ground.
+/// A light tint of the hue that still reads on the dark ground: `-foreground`
+/// (dark).
 @function tint-lit($c) {
-    @return color.mix(#ffffff, $c, 45%);
+    @return color.mix(#ffffff, $c, 55%);
 }
 
-/// The hue sunk into the dark ground: a wash on dark.
+/// The hue sunk into the dark ground: `-bg` and the accent wash (dark).
 @function tint-night($c) {
     @return color.mix($gray-900, $c, 78%);
+}
+
+/// The faintest wash on the dark ground: `-soft` (dark).
+@function tint-night-soft($c) {
+    @return color.mix($gray-900, $c, 88%);
+}
+
+// The same hue, darkened until it reads at WCAG AA (4.5:1) on white and on
+// the light grey surfaces down to `--ss-color-surface-1` — as text, and
+// under white text. Core 0.5's `ensure-contrast($c, #ececec, 4.5)`, step for
+// step, so a retuned hue is darkened exactly as core would darken it. A hue
+// that already passes comes back unchanged.
+
+@function -luminance($c) {
+    $sum: 0;
+    @each $channel, $weight in ("red": 0.2126, "green": 0.7152, "blue": 0.0722)
+    {
+        $v: math.div(color.channel($c, $channel, $space: rgb), 255);
+        @if $v <= 0.03928 {
+            $v: math.div($v, 12.92);
+        } @else {
+            $v: math.pow(math.div($v + 0.055, 1.055), 2.4);
+        }
+        $sum: $sum + $weight * $v;
+    }
+    @return $sum;
+}
+
+@function -contrast($a, $b) {
+    $la: -luminance($a) + 0.05;
+    $lb: -luminance($b) + 0.05;
+    @return math.div(math.max($la, $lb), math.min($la, $lb));
+}
+
+/// `-success`, `-link`, `-accent`, … (light): the hue as text.
+@function ink($c, $ground: $gray-115, $min-ratio: 4.5) {
+    $result: $c;
+    $guard: 0;
+    @while -contrast($result, $ground) < $min-ratio and $guard < 50 {
+        $result: color.scale($result, $lightness: -2%);
+        $result: rgb(
+            math.round(color.channel($result, "red", $space: rgb)),
+            math.round(color.channel($result, "green", $space: rgb)),
+            math.round(color.channel($result, "blue", $space: rgb))
+        );
+        $guard: $guard + 1;
+    }
+    @return $result;
 }
 
 // -----------------------------------------------------------------------------
@@ -119,6 +184,7 @@ $info: #6a8dca !default; // N2705
 // -----------------------------------------------------------------------------
 
 $code-bg: #1e1e1e !default; // core: dark in both themes
+$code-bg-dark: #0a0a0a !default; // and darker still on the dark ground
 $code-fg: #f4f4f4 !default;
 
 // -----------------------------------------------------------------------------

@@ -26,11 +26,15 @@ test("the theme reaches core: tokens come after core's defaults", () => {
     // whole mechanism, so the last `:root` value must be the theme's. The
     // `--theme-*` names exist only in the theme, so finding them in the last
     // `:root` block proves the theme's block came after core's.
-    const blocks = [...css.matchAll(/(?:^|\})\s*:root\s*\{([^{}]*)\}/g)];
+    const blocks = [
+        ...css.matchAll(
+            /(?:^|\})\s*:root,\s*\[data-theme=light\]\s*\{([^{}]*)\}/g,
+        ),
+    ];
     const last = blocks.at(-1)[1];
     assert.match(last, /--theme-accent:/);
-    assert.match(last, /--ss-color-accent:\s*#3696c1/);
-    const root = declarationsIn(css, ":root");
+    assert.match(last, /--ss-color-accent:\s*rgb\(40, 113, 146\)/);
+    const root = declarationsIn(css, ':root, [data-theme="light"]');
     assert.equal(root["--ss-color-background"], "#ffffff");
 });
 
@@ -42,8 +46,8 @@ test("headings take the heading tokens, at zero specificity", () => {
     assert.equal(h["line-height"], "var(--ss-leading-heading)");
 });
 
-test("a band stamped dark paints its own ground", () => {
-    const band = declarationsIn(css, '[data-theme="dark"]:not(:root)');
+test("a band stamped with a theme paints its own ground", () => {
+    const band = declarationsIn(css, "[data-theme]:not(:root)");
     assert.equal(band["background-color"], "var(--ss-color-background)");
     assert.equal(band.color, "var(--ss-color-text)");
 });
