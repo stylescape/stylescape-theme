@@ -1,0 +1,12 @@
+// =============================================================================
+// base — the faces and the voices
+// =============================================================================
+//
+// `@forward` only. Nothing here emits a rule until a consumer includes a
+// mixin: the token entries have to stay loadable on their own, and a package
+// that styles a page merely because it was imported is a package you cannot
+// take a palette from.
+// =============================================================================
+
+@forward "fonts";
+@forward "typography";

@@ -1,0 +1,54 @@
+# What holds true of this repository, every time again.
+#
+# One job, because every step is quick: the tests compile the SCSS with
+# dart-sass in-process, and the build is two Vite passes over the same
+# source. Lint, formatting and types first, since they fail fastest; then
+# the tests with coverage; then the build, because a theme that tests
+# green and does not compile into dist/ is not done.
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+  workflow_dispatch:
+
+# A new push to the same branch makes the previous one redundant.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Nothing here writes anything back. Every dependency, stylescape core
+# included, comes from the public npm registry.
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Lint, formatting, types, tests and builds
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Formatting (Prettier)
+        run: npm run format:check
+
+      - name: Typecheck (tsc)
+        run: npm run typecheck
+
+      - name: Tests with coverage (node:test)
+        run: npm run coverage
+
+      - name: The build has to work
+        run: npm run build

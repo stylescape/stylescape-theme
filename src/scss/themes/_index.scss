@@ -1,0 +1,10 @@
+// =============================================================================
+// themes — [data-theme] variants
+//
+// The template is LIGHT by default: the token set at bare `:root` (from
+// tokens/) is core's own default palette. `_dark.scss` applies the dark set
+// wherever `data-theme="dark"` is stamped, on the page or on a single band
+// of it.
+// =============================================================================
+
+@forward "dark";

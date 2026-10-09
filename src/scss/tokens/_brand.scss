@@ -1,0 +1,169 @@
+@use "sass:color";
+@use "sass:string";
+
+// =============================================================================
+// tokens/brand — the placeholder palette, faces and shapes
+//
+// THIS IS THE TEMPLATE. Every value in this file is stylescape core's own
+// default (core 0.4, `12-lexicon/`), copied here so a new theme starts from
+// a package that renders exactly like core and has every knob already in
+// place. `tst/defaults.test.mjs` compiles core and this package side by side
+// and fails if a light `--ss-*` value here stops matching core's.
+//
+// To make a brand theme from it, replace the values below with the brand's
+// and say where each one came from, the way stylescape-mesmera does:
+//
+//   BRAND  a colour the logo itself is drawn in, exactly as written there.
+//
+// then delete `tst/defaults.test.mjs` and add the brand's own provenance
+// test (see doc/template.md). The comment on each swatch below says which
+// core value it mirrors, so the mapping stays readable after the swap.
+//
+// These are the *raw* swatches. Do not use them directly in component code —
+// reference the semantic `--ss-*` custom properties emitted by
+// `tokens/_css-vars.scss`, or the `--theme-*` ones beside them.
+//
+// Every variable is `!default`, so a consumer can retune the palette:
+//
+//     @use "pkg:stylescape_npm/tokens" with (
+//         $accent: #0a6e5c
+//     );
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Neutrals — core's `--ss-color-white`, `-black` and `-gray-*` ramp
+// -----------------------------------------------------------------------------
+
+$white: #ffffff !default; // page, surface, the ink on fills
+$black: #000000 !default; // text, foreground, line-primary
+
+// Core's ramp is the steps 50-900 marked `ramp`; core also writes a dozen
+// greys as literals inside its semantic roles, and they sit between the
+// ramp steps here, numbered by where they fall in lightness.
+
+$gray-50: #fafafa !default; // ramp — surface-alt
+$gray-60: #f5f5f5 !default; // surface-muted, fill-muted, kbd
+$gray-75: #f2f2f2 !default; // text (dark) — core's own dark override
+$gray-100: #f0f0f0 !default; // ramp — surface-hover
+$gray-110: #ededed !default; // border-subtle
+$gray-115: #ececec !default; // surface-1
+$gray-150: #e5e5e5 !default; // border-muted
+$gray-200: #e0e0e0 !default; // ramp — secondary text (dark)
+$gray-210: #dedede !default; // surface-2
+$gray-240: #cfcfcf !default; // surface-3
+$gray-250: #cccccc !default; // line, border
+$gray-300: #b3b3b3 !default; // ramp — muted text (dark)
+$gray-350: #a0a0a0 !default; // the muted chip
+$gray-400: #888888 !default; // ramp
+$gray-500: #666666 !default; // ramp
+$gray-600: #4a4a4a !default; // ramp — lines (dark)
+$gray-650: #414141 !default; // muted and secondary text
+$gray-700: #333333 !default; // ramp — fill, hover (dark)
+$gray-780: #1c1c1c !default; // surface (dark) — core's own dark override
+$gray-800: #1a1a1a !default; // ramp — raised ground (dark)
+$gray-900: #111111 !default; // ramp — page ground (dark)
+
+// -----------------------------------------------------------------------------
+// Accent — core's steel-blue family (hue.gl N24xx)
+// -----------------------------------------------------------------------------
+//
+// Core 0.4 resolves these from `hue_color()`; the hex each one resolves to
+// is written out here so the template carries no dependency on hue.gl.
+
+$accent: #3696c1 !default; // N2405 — accent, link-active, state-active
+$accent-dark: #346a85 !default; // N2407 — accent-highlight
+$accent-light: #8abedc !default; // N2403 — accent-tertiary; accent (dark)
+$accent-link: #65aace !default; // N2404 — link, focus, state-link
+$accent-hover: #acd2e9 !default; // N2402 — link-hover, state-hover
+$visited: #87a2d6 !default; // N2704 — link-visited
+
+// -----------------------------------------------------------------------------
+// Status — core's blue / violet / mauve feedback set
+// -----------------------------------------------------------------------------
+
+$success: #5192c8 !default; // N2555
+$warning: #9582c2 !default; // N3005
+$error: #b577ac !default; // N3305
+$info: #6a8dca !default; // N2705
+
+// Core derives the tints of every hue with the same three mixes; so does
+// the template, so a retuned hue brings its tints with it.
+
+/// Pale fill: `-bg`, and the accent wash.
+@function tint-bg($c) {
+    @return color.mix(#ffffff, $c, 88%);
+}
+
+/// Faintest fill: `-soft`.
+@function tint-soft($c) {
+    @return color.mix(#ffffff, $c, 94%);
+}
+
+/// A readable dark tint of the hue: `-foreground`.
+@function tint-fg($c) {
+    @return color.mix(#111111, $c, 62%);
+}
+
+/// A light tint of the hue that still reads on the dark ground.
+@function tint-lit($c) {
+    @return color.mix(#ffffff, $c, 45%);
+}
+
+/// The hue sunk into the dark ground: a wash on dark.
+@function tint-night($c) {
+    @return color.mix($gray-900, $c, 78%);
+}
+
+// -----------------------------------------------------------------------------
+// Code
+// -----------------------------------------------------------------------------
+
+$code-bg: #1e1e1e !default; // core: dark in both themes
+$code-fg: #f4f4f4 !default;
+
+// -----------------------------------------------------------------------------
+// Type
+// -----------------------------------------------------------------------------
+//
+// Core's stacks: the first name in each is a family core does not ship, so
+// the browser falls through to the system faces. A brand theme puts its own
+// face first and ships it under `src/font/` (see `base/_fonts.scss`).
+
+$font-sans:
+    stylescape_sans_regular, "Roboto Sans", "Helvetica Neue", Helvetica, Arial,
+    sans-serif !default;
+$font-heading: $font-sans !default;
+$font-display: $font-sans !default;
+$font-mono:
+    stylescape_mono_regular, "Roboto Mono", "Courier New", Courier, monospace !default;
+
+// Core sets h1-h6 bold at line-height 1.2 with no tracking; the template's
+// heading setting says the same thing through the heading tokens.
+$heading-weight: 700 !default;
+$heading-tracking: 0em !default;
+$heading-leading: 1.2 !default;
+
+// -----------------------------------------------------------------------------
+// Shape — core's radius scale (`12-lexicon/_radius.scss`)
+// -----------------------------------------------------------------------------
+
+$radius-xs: 0.0625rem !default; // 1px
+$radius-sm: 0.125rem !default; // 2px
+$radius-md: 0.25rem !default; // 4px, the default
+$radius-lg: 0.5rem !default; // 8px
+$radius-xl: 1rem !default; // 16px
+$radius-2xl: 1.25rem !default; // 20px
+$radius-3xl: 1.5rem !default; // 24px
+$radius-full: 624.9375rem !default; // 9999px, a pill
+
+// -----------------------------------------------------------------------------
+// Depth — core's shadow colours (`12-lexicon/_shadow.scss`, `33-overrides`)
+// -----------------------------------------------------------------------------
+//
+// Unquoted strings rather than Sass colours, so they reach the CSS written
+// exactly as core writes them (Sass would print `rgba(0, 0, 0, 0.1)`).
+
+$shadow-color: string.unquote("rgb(0 0 0 / 0.1)") !default;
+$shadow-color-heavy: string.unquote("rgb(0 0 0 / 0.25)") !default;
+$shadow-color-dark: string.unquote("rgb(0 0 0 / 0.4)") !default;
+$shadow-color-dark-heavy: string.unquote("rgb(0 0 0 / 0.6)") !default;

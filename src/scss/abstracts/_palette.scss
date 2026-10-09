@@ -1,0 +1,25 @@
+@use "sass:color";
+@use "../tokens/brand" as brand;
+
+// =============================================================================
+// abstracts/palette — the colours that go THROUGH a transparency
+// =============================================================================
+//
+// The tokens stay custom properties so a `data-theme` stamp can flip them.
+// But a token cannot be faded — `rgba(var(--x), .12)` is not CSS — and a
+// site needs a few faded colours: the scrim over a video, the glass of a
+// button laid on a picture. These Sass names stand BESIDE the tokens for
+// exactly that, each one the same swatch as the token it shadows. Where a
+// partial can use a token it should; where it needs an alpha, it uses these.
+// =============================================================================
+
+$accent: brand.$accent !default; // --theme-accent, --ss-color-accent
+$white: brand.$white !default; // --theme-white
+$ink: brand.$black !default; // --ss-color-text (light)
+$night: brand.$gray-900 !default; // --ss-color-background (dark)
+
+/// `rgba($colour, $alpha)` is on its way out of Dart Sass now that there is
+/// more than one colour space; `color.change()` does the same and stays.
+@function fade($color, $alpha) {
+    @return color.change($color, $alpha: $alpha);
+}

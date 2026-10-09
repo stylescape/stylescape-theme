@@ -1,0 +1,22 @@
+// =============================================================================
+// base/fonts — loading the faces
+// =============================================================================
+//
+// The template ships no face: its stacks are core's, which fall through to
+// the system fonts. A brand theme puts its woff2 files under `src/font/<face>/`
+// beside their licence, declares them in `src/font/fonts.css`, and names
+// the latin cuts below. A consumer loads that file once, as plain CSS so its
+// `url()`s resolve relative to the file in every bundler:
+//
+//     import "stylescape_npm/font/fonts.css";
+// =============================================================================
+
+/// The files worth a `<link rel="preload">`: the latin cut of each face the
+/// first screen is set in. Paths are relative to `src/font/`. Empty in the
+/// template; e.g. `("inter/inter-latin-wght-normal.woff2")`.
+$preload: () !default;
+
+/// Numerals that line up in a column: a figure in a table, a date.
+@mixin tabular {
+    font-variant-numeric: tabular-nums;
+}

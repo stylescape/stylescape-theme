@@ -1,0 +1,13 @@
+// =============================================================================
+// abstracts — the tools every partial needs, behind one name
+// =============================================================================
+//
+// A partial starts with `@use "pkg:stylescape_npm/abstracts" as *;` and
+// thereby has the swatches, `fade()`, `dark()` and the breakpoints. NOT ONE
+// LINE OF CSS comes out of this file — it only makes names known, which is
+// why every partial can load it without worrying about what it emits.
+// =============================================================================
+
+@forward "breakpoints";
+@forward "palette";
+@forward "theme";

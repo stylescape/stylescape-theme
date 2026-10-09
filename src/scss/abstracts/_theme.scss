@@ -1,0 +1,26 @@
+// =============================================================================
+// abstracts/theme — writing the dark side next to the light one
+// =============================================================================
+//
+// Almost everything follows the theme by itself, because it is written in
+// tokens. What does not — a faded colour from `abstracts/palette` — writes
+// its dark side beside its light rule:
+//
+//     .scrim {
+//         background: fade($white, 0.6);
+//         @include dark {
+//             background: fade($night, 0.6);
+//         }
+//     }
+//
+// The selector becomes `[data-theme="dark"] .scrim, .scrim[data-theme="dark"]`
+// — inside a dark band or on one — and always more specific than the rule
+// around it. Use it inside a rule; at the top level there is no `&`.
+// =============================================================================
+
+@mixin dark {
+    [data-theme="dark"] &,
+    &[data-theme="dark"] {
+        @content;
+    }
+}

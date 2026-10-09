@@ -1,0 +1,66 @@
+{
+  "@context": "https://w3id.org/codemeta/3.0",
+  "@type": "SoftwareSourceCode",
+  "identifier": "stylescape_npm",
+  "name": "stylescape-theme",
+  "description": "The brand-neutral starter theme for the Stylescape design system, and the template a brand theme is copied from: stylescape core's default palette as --ss-* token overrides, a dark variant for whole pages or single bands, and the system font stacks.",
+  "version": "0.1.0",
+  "dateModified": "2026-10-09",
+  "codeRepository": "https://github.com/stylescape/stylescape-theme",
+  "issueTracker": "https://github.com/stylescape/stylescape-theme/issues",
+  "license": "https://spdx.org/licenses/MIT",
+  "programmingLanguage": [
+    {
+      "@type": "ComputerLanguage",
+      "name": "SCSS"
+    },
+    {
+      "@type": "ComputerLanguage",
+      "name": "JavaScript"
+    },
+    {
+      "@type": "ComputerLanguage",
+      "name": "TypeScript"
+    }
+  ],
+  "runtimePlatform": ["Node.js 22+", "dart-sass"],
+  "developmentStatus": "wip",
+  "inLanguage": ["en"],
+  "keywords": [
+    "stylescape",
+    "theme",
+    "template",
+    "starter",
+    "design-tokens",
+    "sass",
+    "scss",
+    "css"
+  ],
+  "author": [
+    {
+      "@type": "Person",
+      "@id": "https://orcid.org/0000-0002-8790-8630",
+      "givenName": "Lars Bastiaan",
+      "familyName": "van Vianen",
+      "email": "lars@scape.agency",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Scape Agency"
+      }
+    }
+  ],
+  "softwareRequirements": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "sass",
+      "description": "dart-sass 1.93 or later, with the Node package importer registered."
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "stylescape",
+      "description": "Stylescape core, for the package root only; ./tokens, ./themes, ./abstracts and ./base load no core."
+    }
+  ],
+  "buildInstructions": "https://github.com/stylescape/stylescape-theme#readme",
+  "readme": "https://github.com/stylescape/stylescape-theme#readme"
+}
