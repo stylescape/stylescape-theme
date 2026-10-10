@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- The tag-triggered `Publish Package` workflow runs on the Node version in
+  `.nvmrc` (it was pinned to Node 18, below `engines.node`, and Vite 8
+  could not load), and no longer tries to `npm publish` the private
+  template from `dist/`.
+
 ## [0.1.1] — 2026-10-10
 
 The first tagged release. It ships the 0.1.0 work below (the Stylescape
