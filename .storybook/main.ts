@@ -23,7 +23,7 @@ import type { StorybookConfig } from "@storybook/web-components-vite";
 import { NodePackageImporter } from "sass";
 
 const config: StorybookConfig = {
-    stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|ts)"],
+    stories: ["../src/**/*.stories.@(js|ts)"],
 
     addons: [
         "@storybook/addon-docs",
@@ -60,7 +60,6 @@ const config: StorybookConfig = {
                 "import",
                 "global-builtin",
                 "color-functions",
-                "mixed-decls",
                 "legacy-js-api",
                 "if-function",
                 "slash-div",
