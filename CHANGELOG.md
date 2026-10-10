@@ -4,6 +4,30 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] — 2026-10-10
+
+The first tagged release. It ships the 0.1.0 work below (the Stylescape
+theme layout on stylescape 0.5.1, every devDependency at its latest
+version) together with the following.
+
+### Added
+
+- **Storybook** (the fleet's shared setup): `.storybook/main.ts` and
+  `preview.ts`, `src/stories/theme.stories.ts`, the `storybook` and
+  `build-storybook` scripts and their devDependencies (Storybook 10.6,
+  `lit`); `storybook-static/` is git-ignored.
+
+### Changed
+
+- Dependabot groups its updates, lists only the ecosystems the repo really
+  uses and targets the `dev` branch.
+
+### Fixed
+
+- The Storybook build no longer warns: the obsolete `mixed-decls`
+  deprecation silence and the unmatched `src/**/*.mdx` stories glob are
+  gone.
+
 ## [0.1.0] — 2026-10-09
 
 The repository becomes the brand-neutral starter theme, laid out like

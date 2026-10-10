@@ -1,6 +1,6 @@
 {
   "name": "stylescape_npm",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The brand-neutral starter theme for the Stylescape design system — the template a new brand theme is copied from. Its placeholder palette is stylescape core's own defaults as --ss-* token overrides, with a dark variant for whole pages or single bands and the system font stacks.",
   "keywords": [
     "stylescape",
