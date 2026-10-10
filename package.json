@@ -100,7 +100,9 @@
     "clean": "rm -rf dist .vite coverage",
     "prepublishOnly": "npm run check && npm run build",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "coverage": "node --test --experimental-test-coverage --test-coverage-include=tst/helpers.mjs --test-coverage-include=stylelint.config.mjs --test-coverage-lines=95 --test-coverage-branches=80 --test-coverage-functions=80 tst/*.test.mjs"
+    "coverage": "node --test --experimental-test-coverage --test-coverage-include=tst/helpers.mjs --test-coverage-include=stylelint.config.mjs --test-coverage-lines=95 --test-coverage-branches=80 --test-coverage-functions=80 tst/*.test.mjs",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "peerDependencies": {
     "sass": "^1.93.0",
@@ -116,12 +118,18 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@storybook/addon-a11y": "^10.6.1",
+    "@storybook/addon-docs": "^10.6.1",
+    "@storybook/addon-themes": "^10.6.1",
+    "@storybook/web-components-vite": "^10.6.1",
     "@types/node": "^26.6.4",
     "eslint": "^10.12.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.13.0",
+    "lit": "^3.3.3",
     "prettier": "^3.9.9",
     "sass": "^1.105.1",
+    "storybook": "^10.6.1",
     "stylescape": "^0.5.1",
     "typescript": "^7.0.2",
     "vite": "^8.3.4"
