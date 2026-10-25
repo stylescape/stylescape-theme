@@ -12,7 +12,7 @@
 
 ## File map
 
-```
+```text
 src/
   font/            fonts.css (empty in the template)
   scss/
