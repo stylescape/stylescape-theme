@@ -118,20 +118,20 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@storybook/addon-a11y": "^10.6.1",
-    "@storybook/addon-docs": "^10.6.1",
-    "@storybook/addon-themes": "^10.6.1",
-    "@storybook/web-components-vite": "^10.6.1",
-    "@types/node": "^26.6.4",
-    "eslint": "^10.12.0",
+    "@storybook/addon-a11y": "^10.6.7",
+    "@storybook/addon-docs": "^10.6.7",
+    "@storybook/addon-themes": "^10.6.7",
+    "@storybook/web-components-vite": "^10.6.7",
+    "@types/node": "^26.6.6",
+    "eslint": "^10.15.0",
     "eslint-config-prettier": "^10.1.8",
-    "globals": "^17.13.0",
+    "globals": "^17.14.0",
     "lit": "^3.3.3",
-    "prettier": "^3.9.9",
-    "sass": "^1.105.1",
+    "prettier": "^3.10.1",
+    "sass": "^1.108.2",
     "storybook": "^10.6.1",
-    "stylescape": "^0.5.1",
+    "stylescape": "^0.5.6",
     "typescript": "^7.0.2",
-    "vite": "^8.3.4"
+    "vite": "^8.3.8"
   }
 }
